@@ -24,7 +24,11 @@
         type: Array,
         default: null
       },
-      pullup: {
+      pullUpload: {
+        type: Boolean,
+        default: false
+      },
+      pullDownRefresh: {
         type: Boolean,
         default: false
       },
@@ -58,11 +62,18 @@
             me.$emit('scroll', pos)
           })
         }
-        if (this.pullup) {
+        if (this.pullUpload) {
           this.scroll.on('scrollEnd', () => {
             // 滑动到底部才出发事件
             if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
               this.$emit('scrolltoend')
+            }
+          })
+        }
+        if (this.pullDownRefresh) {
+          this.scroll.on('scroll', () => {
+            if (this.scroll.y >= 10) {
+              this.$emit('scrolltotop')
             }
           })
         }

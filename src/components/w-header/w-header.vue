@@ -42,7 +42,13 @@
     },
     methods: {
       selectAllHandler() {
+        if (!this.isSelectAll) {
+          return
+        }
         this.selectAll = !this.selectAll
+        if (this.selectAll) {
+          this.$emit('selectall')
+        }
       }
     },
     components: {}
@@ -53,13 +59,13 @@
   @import '~common/styl/variable.styl';
   @import '~common/styl/mixin.styl';
 
-  .m-header 
+  .m-header
     position: relative
     height: 44px
     text-align: center
     color: $color-theme
     border-1px($border-bootm-color)
-    .back 
+    .back
       position: absolute
       left: 0
       top: 0
@@ -71,24 +77,24 @@
       color: $color-theme
     .select-all
       font-size $font-mid
-      padding 0 15px    
-    h1 
+      padding 0 15px
+    h1
       height: 44px
       line-height: 44px
       font-size: $font-header
       font-weight: bold
-    .options-btn 
+    .options-btn
       position: absolute
       top: 0px
       right: 0
       font-size: 0
-      .check-btn, .much-option 
+      .check-btn, .much-option
         display: inline-block
         height: 100%
         line-height: 44px
         padding: 0 15px
         font-size: $font-mid
-      
-    
-  
+
+
+
 </style>

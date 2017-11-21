@@ -1,9 +1,9 @@
 <template>
   <div class="tab">
-    <div class="tab-item">
+    <div class="tab-item" @click="clickUnapproval">
       <router-link tag="div" to="/unapproval" class="text">{{unapprovalAmount}}</router-link>
     </div>
-    <div class="tab-item">
+    <div class="tab-item" @click="clickApproval">
       <router-link tag="div" to="/approval" class="text">已审批</router-link>
     </div>
 
@@ -22,6 +22,14 @@
     computed: {
       unapprovalAmount() {
         return this.unapprovalList.length === 0 ? '未审批' : `未审批(${this.unapprovalList.length})`
+      }
+    },
+    methods: {
+      clickUnapproval() {
+        this.$emit('clickunapproval')
+      },
+      clickApproval() {
+        this.$emit('clickapproval')
       }
     }
   }

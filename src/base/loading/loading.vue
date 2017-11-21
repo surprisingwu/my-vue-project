@@ -15,13 +15,13 @@ export default {
 }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable"
+  @import "~common/styl/variable"
 
   .loading
     width: 100%
     text-align: center
     .desc
       line-height: 20px
-      font-size: $font-size-small
-      color: $color-text-l
+      font-size: $font-header
+      color: $color-theme
 </style>

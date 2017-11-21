@@ -20,10 +20,22 @@ const autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend
 // https://github.com/chimurai/http-proxy-middleware
 const proxyTable = config.dev.proxyTable
-
 const app = express()
-const compiler = webpack(webpackConfig)
 
+// mock 数据
+const appData = require('../list.json')
+const unapproval = appData.unapprovalList
+console.log(unapproval)
+const apiRoutes = express.Router()
+apiRoutes.get('/unapproval',(req, res) =>{
+  console.log('true')
+  req.json({
+    errno: 0,
+    data: unapproval
+  })
+}) 
+app.use("/api",apiRoutes)
+const compiler = webpack(webpackConfig)
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   quiet: true
