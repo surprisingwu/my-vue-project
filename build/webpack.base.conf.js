@@ -1,4 +1,5 @@
 'use strict'
+const PostCompilePlugin = require('webpack-post-compile-plugin')
 const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
@@ -28,10 +29,12 @@ module.exports = {
       'common':resolve('src/common'),
       'api':resolve('src/api'),
       'base':resolve('src/base'),
-      'components': resolve('src/components'),
-      'api':resolve('src/api')
+      'components': resolve('src/components')
     }
   },
+  plugins:[
+    new PostCompilePlugin()
+  ],
   module: {
     rules: [
       ...(config.dev.useEslint? [{

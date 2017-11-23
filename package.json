@@ -10,15 +10,20 @@
     "lint": "eslint --ext .js,.vue src",
     "build": "node build/build.js"
   },
+  "compileDependencies": ["cube-ui"],
   "dependencies": {
     "axios": "^0.17.1",
     "better-scroll": "^1.4.2",
+    "cube-ui": "^1.0.2",
     "fastclick": "^1.0.6",
-    "iview": "^2.7.3",
     "mint-ui": "^2.2.10",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "babel-plugin-transform-modules": "^0.1.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^2.1.1",
+    "webpack-post-compile-plugin": "^0.1.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
