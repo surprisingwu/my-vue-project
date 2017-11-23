@@ -1,29 +1,23 @@
 <template>
   <div class="m-header">
-<span class="back icon-back" v-show="!selectAll">
-</span>
-<span class="back select-all" v-show="selectAll">{{selectOption}}</span>
+    <span class="back icon-back" v-show="!isMutiple"></span>
+    <span class="back select-all" v-show="isMutiple" @click.stop="selectAllHandler">{{selectOption}}</span>
     <h1 class="title">审批</h1>
     <div class="options-btn">
-      <span class="check-btn" v-show="!selectAll">查询 </span>
-      <span class="much-option" @click="selectAllHandler">{{selectText}}</span>
+      <span class="check-btn" v-show="!isMutiple">查询 </span>
+      <span class="much-option" @click="mutipleOperation">{{selectText}}</span>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import {mapGetters} from 'vuex'
   export default {
     name: 'w-header',
-    props: {
-      isSelectAll: {
-        type: Boolean,
-        default: true
-      }
-    },
     data() {
       return {
         selectAll: false,
-        cancelSelectAll: false
+        isMutiple: false
       }
     },
     computed: {
@@ -38,16 +32,18 @@
           return '取消全选'
         }
         return '全选'
-      }
+      },
+      ...mapGetters(['isSelectAll'])
     },
     methods: {
+      mutipleOperation() {
+        this.isMutiple = !this.isMutiple
+        this.$emit('mutipleoperation', this.isMutiple)
+      },
       selectAllHandler() {
-        if (!this.isSelectAll) {
-          return
-        }
         this.selectAll = !this.selectAll
         if (this.selectAll) {
-          this.$emit('selectall')
+          this.$emit('selectalloperation')
         }
       }
     },

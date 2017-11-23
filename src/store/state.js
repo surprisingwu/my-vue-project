@@ -1,4 +1,5 @@
 const state = {
-    unapprovalList: []
+    unapprovalList: [],
+    isSelectAll: false
 }
 export default state

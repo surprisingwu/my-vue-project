@@ -38,7 +38,7 @@
         pullDownRefresh: {
           txt: '下拉加载成功...'
         },
-        pullUpLoad:{
+        pullUpLoad: {
           threshold: 40,
           txt: {
             more: 'Load more',
@@ -78,7 +78,7 @@
             const temp = {
               'type': '差旅费报销单',
               'time': '2016 04 16  21：08',
-              'name': '王晶'+this.count,
+              'name': '王晶' + this.count,
               'total': '￥700.00'
             }
             this.unapprovalList.push(temp)

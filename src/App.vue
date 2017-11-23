@@ -1,15 +1,21 @@
 <template>
   <div id="app">
-    <w-header :isSelectAll="isMutiple"></w-header>
+    <w-header
+      :isSelectAll="isMutiple"
+      @mutipleoperation="mutipleOperation"
+      @selectalloperation = "selectAllOperation"
+    ></w-header>
     <tab
-      :unapprovalList="unapprovalList"
       @clickunapproval="clickUnapproval"
       @clickapproval="clickApproval"
+      :unapprovalListLength="unapprovalListLength"
     ></tab>
     <router-view
       @approvalclick = "approvalClick"
       @deleteclick = "deleteClick"
       @processclick = "processClick"
+      :startMutiple="startMutiple"
+      @showunapprovallistlength="showUnapprovalListLength"
     ></router-view>
   </div>
 </template>
@@ -17,19 +23,17 @@
 <script type="text/ecmascript-6">
   import WHeader from 'components/w-header/w-header'
   import Tab from 'components/tab/tab'
-  import {mapGetters} from 'vuex'
+  import { mapMutations } from 'vuex'
   export default {
     name: 'app',
     created() {
-      console.log(this)
     },
     data() {
       return {
-        isMutiple: true
+        isMutiple: false,
+        startMutiple: false,
+        unapprovalListLength: 0
       }
-    },
-    computed: {
-      ...mapGetters(['unapprovalList'])
     },
     methods: {
       approvalClick(item) {
@@ -42,11 +46,23 @@
         alert('click is process')
       },
       clickUnapproval() {
-        this.isMutiple = true
+        this.isMutiple = false
       },
       clickApproval() {
         this.isMutiple = false
-      }
+      },
+      mutipleOperation(bol) {
+        this.startMutiple = bol
+      },
+      showUnapprovalListLength(num) {
+        this.unapprovalListLength = num
+      },
+      selectAllOperation() {
+        this.setSelectAll(true)
+      },
+      ...mapMutations({
+        setSelectAll: 'SET_SELECT_ALL'
+      })
     },
     components: {
       WHeader, Tab

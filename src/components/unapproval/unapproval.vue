@@ -1,20 +1,20 @@
 <template>
-<div>
-  <scroll class="unapproval" 
-  :data="unapprovalList"
-  @scrolltoend="pullUploadHandler"
-  :pullUpload = "pullUpload"
-  :pullDownRefresh="pullDownRefresh"
-  @scrolltotop="pullDownHandler"
-  >
+<div class="unapproval">
+    <scroll
+      ref="scroll"
+      :data="unapprovalList"
+      :pull-down-refresh="pullDownRefresh"
+      @pulling-down="onPullingDown"
+      :pull-up-load="pullUpLoad"
+      @pulling-up="onPullingUp"
+      :pullDownStyle="{ color: '#2DBBFA', fontSize: '13px' }"
+    >
     <ul>
-      <transition name="slide">
-        <loading v-show="isPullDownRefresh" class="pull-down"></loading>
-      </transition>  
       <li class="list-item"
           v-for="(item,index) in unapprovalList"
           :key="index"
           ref="list"
+          v-show="!startMutiple"
           @touchstart.prevent="touchSlideStart(index,item,$event)"
           @touchmove.prevent="touchSlideMove(index,$event)"
           @touchend="touchSlideEnd(index,$event)"
@@ -29,44 +29,70 @@
           </div>
         </div>
       </li>
-      <loading v-show="hasmore"></loading>
+      <li v-for="(item,index) in unapprovalList"
+          :key="index"
+          class="list-item"
+          v-show="startMutiple"
+      >
+        <div class="item-inner">
+          <check-select :isSelectAll="isSelectAll">
+            <approval-list :item="item"></approval-list>
+          </check-select>
+        </div>
+      </li>
     </ul>
   </scroll>
-  <div class="loading-wrapper" v-show="!unapprovalList.length">
-    <loading></loading>
-  </div>
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import ApprovalList from 'base/approval-list/approval-list'
-  import Scroll from 'base/scroll/scroll'
-  import Loading from 'base/loading/loading'
+  import {Scroll} from 'cube-ui'
   import {prefixStyle} from 'common/js/dom'
   import {getUnapproval} from 'api/unapproval'
-  import {mapMutations} from 'vuex'
+  import CheckSelect from 'components/check-select/check-select'
+  import ApprovalList from 'base/approval-list/approval-list'
 
   const SLIDE_BTN_WIDTH = 65
   const START_SLIDE = 20
   const transform = prefixStyle('transform')
   const transition = prefixStyle('transition')
   export default {
-    props: {},
+    props: {
+      startMutiple: {
+        type: Boolean,
+        default: false
+      },
+      isSelectAll: {
+        type: Boolean,
+        default: false
+      }
+    },
     data() {
       return {
         activeItem: -1,
+        // 是否还有数据
         unapprovalList: [],
         hasmore: false,
-        pullUpload: true,
-        pullDownRefresh: true,
-        isPullDownRefresh: false
+        count: 0,
+        // checkBox的状态
+        isSelected: false,
+        pullDownRefresh: {
+          txt: '下拉加载成功...'
+        },
+        pullUpLoad: {
+          threshold: 40,
+          txt: {
+            more: 'Load more',
+            noMore: '没有更多的数据加载了...'
+        }
+      }
       }
     },
     created() {
-      this.touch = {} // eslint-disable-next-line    
+      this.touch = {} // eslint-disable-next-line
       getUnapproval().then((res) =>{
-        this.unapprovalList = res.unapprovalList
         this.hasmore = true
-        this.setUnapprovalList(res.unapprovalList)
+        this.unapprovalList = res.unapprovalList
+        this.showUnapproval(this.unapprovalList.length)
       })
     },
     methods: {
@@ -112,26 +138,53 @@
       touchSlideEnd(index, $event) {
         this.initiated = false
       },
-      pullUploadHandler() {
+      onPullingDown() {
+        const _self = this
         setTimeout(() => {
-          this.hasmore = false
-        }, 500)
+          if (Math.random() > 0.5) {
+            // 如果有新数据
+            const temp = {
+              'type': '差旅费报销单',
+              'time': '2016 04 16  21：08',
+              'name': '王晶',
+              'total': '￥700.00'
+            }
+            _self.unapprovalList.push(temp)
+          } else {
+            // 如果没有新数据
+            _self.$refs.scroll.forceUpdate()
+          }
+        }, 1000)
       },
-      pullDownHandler() {
-       this.isPullDownRefresh = true
-       setTimeout(() => {
-         this.isPullDownRefresh = false
-       }, 500)
+      onPullingUp() {
+        const _self = this
+        setTimeout(() => {
+          if (Math.random() > 0.5) {
+            // 如果有新数据
+            this.count++
+            const temp = {
+              'type': '差旅费报销单',
+              'time': '2016 04 16  21：08',
+              'name': '王晶' + _self.count,
+              'total': '￥700.00'
+            }
+            _self.unapprovalList.push(temp)
+            _self.showUnapproval(_self.unapprovalList.length)
+          } else {
+            // 如果没有新数据
+            _self.$refs.scroll.forceUpdate()
+          }
+        }, 1000)
+      },
+      showUnapproval(length) {
+        this.$emit('showunapprovallistlength', length)
       },
       _offsetWidth() {
         return this.$refs.swipeBtns[0].children.length * SLIDE_BTN_WIDTH
-      },
-      ...mapMutations({
-        'setUnapprovalList': 'SET_UNAPPROVAL_LIST'
-      })
+      }
     },
     components: {
-      ApprovalList, Scroll, Loading
+      ApprovalList, Scroll, CheckSelect
     }
   }
 </script>
@@ -144,7 +197,7 @@
     bottom 0
     left: 0
     z-index -1
-    width: 100% 
+    width: 100%
     ul
       overflow hidden
       .pull-down
@@ -152,7 +205,7 @@
         &.slide-enter-active, &.slide-leave-active
           transition: height  all .5s linear
         &.slide-enter, &.slide-leave-to
-          opacity: 0   
+          opacity: 0
       .list-item
         position relative
         height 70px
@@ -188,10 +241,10 @@
             background-color $delete-color
           .process-btn
             right -3*($slide-btn-width)
-            background-color $process-color 
+            background-color $process-color
   .loading-wrapper
     position fixed
     top 50%
     left 50%
-    transform translate3d(-50%,-50%,0) 
+    transform translate3d(-50%,-50%,0)
 </style>

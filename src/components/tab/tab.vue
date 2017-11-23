@@ -12,16 +12,14 @@
 <script type="text/ecmascript-6">
   export default {
     props: {
-      unapprovalList: {
-        type: Array,
-        default () {
-          return []
-        }
+      unapprovalListLength: {
+        type: Number,
+        default: 0
       }
     },
     computed: {
       unapprovalAmount() {
-        return this.unapprovalList.length === 0 ? '未审批' : `未审批(${this.unapprovalList.length})`
+        return this.unapprovalListLength === 0 ? '未审批' : `未审批(${this.unapprovalListLength})`
       }
     },
     methods: {
