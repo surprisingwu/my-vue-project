@@ -14,7 +14,7 @@
           v-for="(item,index) in unapprovalList"
           :key="index"
           ref="list"
-          v-show="!startMutiple"
+          v-show="!isMutiple"
           @touchstart.prevent="touchSlideStart(index,item,$event)"
           @touchmove.prevent="touchSlideMove(index,$event)"
           @touchend="touchSlideEnd(index,$event)"
@@ -32,10 +32,10 @@
       <li v-for="(item,index) in unapprovalList"
           :key="index"
           class="list-item"
-          v-show="startMutiple"
+          v-show="isMutiple"
       >
         <div class="item-inner">
-          <check-select :isSelectAll="isSelectAll">
+          <check-select @ischangeselectall="isChangeSelectAll" ref="checkList">
             <approval-list :item="item"></approval-list>
           </check-select>
         </div>
@@ -50,6 +50,7 @@
   import {getUnapproval} from 'api/unapproval'
   import CheckSelect from 'components/check-select/check-select'
   import ApprovalList from 'base/approval-list/approval-list'
+  import {mapMutations, mapGetters} from 'vuex'
 
   const SLIDE_BTN_WIDTH = 65
   const START_SLIDE = 20
@@ -57,14 +58,15 @@
   const transition = prefixStyle('transition')
   export default {
     props: {
-      startMutiple: {
-        type: Boolean,
-        default: false
-      },
-      isSelectAll: {
+      isMutiple: {
         type: Boolean,
         default: false
       }
+    },
+    computed: {
+      ...mapGetters([
+        'isSelectAll'
+      ])
     },
     data() {
       return {
@@ -179,9 +181,25 @@
       showUnapproval(length) {
         this.$emit('showunapprovallistlength', length)
       },
+      isChangeSelectAll(flag) {
+        if (flag === false) {
+          this.setSelectAll(false)
+          return
+        }
+        let checkList = this.$refs.checkList
+        let index = checkList.findIndex((item) => item.isSelected === false)
+        if (index > -1) {
+          this.setSelectAll(false)
+        } else {
+          this.setSelectAll(true)
+        }
+      },
       _offsetWidth() {
         return this.$refs.swipeBtns[0].children.length * SLIDE_BTN_WIDTH
-      }
+      },
+      ...mapMutations({
+        'setSelectAll': 'SET_SELECT_ALL'
+      })
     },
     components: {
       ApprovalList, Scroll, CheckSelect

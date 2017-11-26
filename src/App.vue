@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <w-header
-      :isSelectAll="isMutiple"
+      :isMutiple="isMutiple"
       @mutipleoperation="mutipleOperation"
-      @selectalloperation = "selectAllOperation"
     ></w-header>
     <tab
       @clickunapproval="clickUnapproval"
@@ -14,7 +13,7 @@
       @approvalclick = "approvalClick"
       @deleteclick = "deleteClick"
       @processclick = "processClick"
-      :startMutiple="startMutiple"
+      :isMutiple="isMutiple"
       @showunapprovallistlength="showUnapprovalListLength"
     ></router-view>
   </div>
@@ -23,17 +22,17 @@
 <script type="text/ecmascript-6">
   import WHeader from 'components/w-header/w-header'
   import Tab from 'components/tab/tab'
-  import { mapMutations } from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     name: 'app',
-    created() {
-    },
     data() {
       return {
         isMutiple: false,
-        startMutiple: false,
         unapprovalListLength: 0
       }
+    },
+    computed: {
+      ...mapGetters(['isSelectAll'])
     },
     methods: {
       approvalClick(item) {
@@ -49,19 +48,25 @@
         this.isMutiple = false
       },
       clickApproval() {
+        // 如果已经出发批量操作，再点击已办时，进行变量初始化
         this.isMutiple = false
+        if (this.isSelectAll) {
+          this.setSelectAll(false)
+        }
       },
-      mutipleOperation(bol) {
-        this.startMutiple = bol
+      mutipleOperation() {
+        this.isMutiple = !this.isMutiple
+        if (!this.isMutiple) {
+          this.setSelectAll(false)
+          this.setTriggerSelectAll = true
+        }
       },
       showUnapprovalListLength(num) {
         this.unapprovalListLength = num
       },
-      selectAllOperation() {
-        this.setSelectAll(true)
-      },
       ...mapMutations({
-        setSelectAll: 'SET_SELECT_ALL'
+        'setSelectAll': 'SET_SELECT_ALL',
+        'setTriggerSelectAll': 'SET_TRIGGER_SELECT_ALL'
       })
     },
     components: {

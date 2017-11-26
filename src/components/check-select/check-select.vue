@@ -6,28 +6,39 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     data() {
       return {
-        isSelected: false
+        isSelected: false,
+        hasOneNotSelect: true
       }
     },
     computed: {
       selectCls() {
         return this.isSelected ? 'select' : ''
       },
-      ...mapGetters(['isSelectAll'])
+      ...mapGetters([
+        'isSelectAll', 'isTriggerSelectAll'
+      ])
     },
     methods: {
       selectHandler() {
+        // 一旦点击列， 取消watch
+        this.setTriggerSelectAll(false)
         this.isSelected = !this.isSelected
-      }
+        this.$emit('ischangeselectall', this.isSelected)
+      },
+      ...mapMutations({
+        'setTriggerSelectAll': 'SET_TRIGGER_SELECT_ALL'
+      })
     },
     watch: {
-      isSelectAll(newVal) {
-        if (newVal) {
-          this.isSelected = true
+      isSelectAll(newVal, oldVal) {
+        // 只有通过点击全选和取消全选下面才能执行
+        if (this.isTriggerSelectAll) {
+          debugger
+          this.isSelected = newVal
         }
       }
     }

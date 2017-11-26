@@ -11,18 +11,18 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     name: 'w-header',
-    data() {
-      return {
-        selectAll: false,
-        isMutiple: false
+    props: {
+      isMutiple: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
       selectText() {
-        if (this.selectAll) {
+        if (this.isMutiple) {
           return '取消'
         }
         return '批量'
@@ -37,15 +37,16 @@
     },
     methods: {
       mutipleOperation() {
-        this.isMutiple = !this.isMutiple
-        this.$emit('mutipleoperation', this.isMutiple)
+        this.$emit('mutipleoperation')
       },
       selectAllHandler() {
-        this.selectAll = !this.selectAll
-        if (this.selectAll) {
-          this.$emit('selectalloperation')
-        }
-      }
+        this.setSelectAll(!this.isSelectAll)
+        this.setTriggerSelectAll(true)
+      },
+      ...mapMutations({
+        'setSelectAll': 'SET_SELECT_ALL',
+        'setTriggerSelectAll': 'SET_TRIGGER_SELECT_ALL'
+      })
     },
     components: {}
   }

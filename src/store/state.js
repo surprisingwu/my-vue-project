@@ -1,4 +1,5 @@
 const state = {
-    isSelectAll: false
+    isSelectAll: false,
+    isTriggerSelectAll: false
 }
 export default state
