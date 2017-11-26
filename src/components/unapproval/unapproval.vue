@@ -182,6 +182,7 @@
         this.$emit('showunapprovallistlength', length)
       },
       isChangeSelectAll(flag) {
+        // false 不必执行下面的循环
         if (flag === false) {
           this.setSelectAll(false)
           return
