@@ -30,15 +30,16 @@
         this.$emit('ischangeselectall', this.isSelected)
       },
       ...mapMutations({
-        'setTriggerSelectAll': 'SET_TRIGGER_SELECT_ALL'
+        'setTriggerSelectAll': 'SET_TRIGGER_SELECT_ALL',
+         'setAtLeastOne': 'SET_AT_LEAST_ONE'
       })
     },
     watch: {
       isSelectAll(newVal, oldVal) {
         // 只有通过点击全选和取消全选下面才能执行
         if (this.isTriggerSelectAll) {
-          debugger
           this.isSelected = newVal
+          this.setAtLeastOne(newVal)
         }
       }
     }

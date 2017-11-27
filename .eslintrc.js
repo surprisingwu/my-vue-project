@@ -27,6 +27,7 @@ module.exports = {
         'space-before-function-paren': 0,
         'indent': 0,
         'skipBlankLines': 0,
-        'no-multiple-empty-lines': 0
+        'no-multiple-empty-lines': 0,
+        'no-trailing-spaces': 1
     }
 }

@@ -1,5 +1,5 @@
 <template>
-<div class="unapproval">
+<div class="unapproval" ref="unapprovalWrapper">
     <scroll
       ref="scroll"
       :data="unapprovalList"
@@ -54,6 +54,7 @@
 
   const SLIDE_BTN_WIDTH = 65
   const START_SLIDE = 20
+  const PADDING_BOTTOM = 50
   const transform = prefixStyle('transform')
   const transition = prefixStyle('transition')
   export default {
@@ -182,28 +183,44 @@
         this.$emit('showunapprovallistlength', length)
       },
       isChangeSelectAll(flag) {
-        // false 不必执行下面的循环
+        let checkList = this.$refs.checkList
+        let activeIndex = checkList.findIndex((item) => item.isSelected === true)
+        if (activeIndex > -1) {
+          this.setAtLeastOne(true)
+        } else {
+          this.setAtLeastOne(false)
+        }
         if (flag === false) {
           this.setSelectAll(false)
-          return
-        }
-        let checkList = this.$refs.checkList
-        let index = checkList.findIndex((item) => item.isSelected === false)
-        if (index > -1) {
-          this.setSelectAll(false)
         } else {
-          this.setSelectAll(true)
+          let index = checkList.findIndex((item) => item.isSelected === false)
+          if (index > -1) {
+            this.setSelectAll(false)
+          } else {
+            this.setSelectAll(true)
+          }
         }
       },
       _offsetWidth() {
         return this.$refs.swipeBtns[0].children.length * SLIDE_BTN_WIDTH
       },
       ...mapMutations({
-        'setSelectAll': 'SET_SELECT_ALL'
+        'setSelectAll': 'SET_SELECT_ALL',
+        'setAtLeastOne': 'SET_AT_LEAST_ONE'
       })
     },
     components: {
       ApprovalList, Scroll, CheckSelect
+    },
+    watch: {
+      isMutiple(newVal) {
+        const unapprovalWrapper = this.$refs.unapprovalWrapper
+        if (newVal) {
+          unapprovalWrapper.style.bottom = PADDING_BOTTOM + 'px'
+        } else {
+          unapprovalWrapper.style.bottom = '0px'
+        }
+      }
     }
   }
 </script>

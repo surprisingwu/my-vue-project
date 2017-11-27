@@ -11,87 +11,95 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
-  export default {
-    name: 'w-header',
-    props: {
-      isMutiple: {
-        type: Boolean,
-        default: false
+import { mapGetters, mapMutations } from 'vuex'
+export default {
+  name: 'w-header',
+  props: {
+    isMutiple: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    selectText() {
+      if (this.isMutiple) {
+        return '取消'
       }
+      return '批量'
     },
-    computed: {
-      selectText() {
-        if (this.isMutiple) {
-          return '取消'
-        }
-        return '批量'
-      },
-      selectOption() {
-        if (this.isSelectAll) {
-          return '取消全选'
-        }
-        return '全选'
-      },
-      ...mapGetters(['isSelectAll'])
+    selectOption() {
+      if (this.isSelectAll) {
+        return '取消全选'
+      }
+      return '全选'
     },
-    methods: {
-      mutipleOperation() {
-        this.$emit('mutipleoperation')
-      },
-      selectAllHandler() {
-        this.setSelectAll(!this.isSelectAll)
-        this.setTriggerSelectAll(true)
-      },
-      ...mapMutations({
-        'setSelectAll': 'SET_SELECT_ALL',
-        'setTriggerSelectAll': 'SET_TRIGGER_SELECT_ALL'
-      })
+    ...mapGetters(['isSelectAll'])
+  },
+  methods: {
+    mutipleOperation() {
+      this.$emit('mutipleoperation')
     },
-    components: {}
-  }
+    selectAllHandler() {
+      this.setSelectAll(!this.isSelectAll)
+      this.setTriggerSelectAll(true)
+    },
+    ...mapMutations({
+      setSelectAll: 'SET_SELECT_ALL',
+      setTriggerSelectAll: 'SET_TRIGGER_SELECT_ALL'
+    })
+  },
+  components: {}
+}
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import '~common/styl/variable.styl';
-  @import '~common/styl/mixin.styl';
+@import '~common/styl/variable.styl';
+@import '~common/styl/mixin.styl';
 
-  .m-header
-    position: relative
-    height: 44px
-    text-align: center
-    color: $color-theme
-    border-1px($border-bootm-color)
-    .back
-      position: absolute
-      left: 0
-      top: 0
-      height: 100%
-      padding: 0 15px 0 10px
-      line-height: 44px
-      text-align: left
-      font-size: 25px
-      color: $color-theme
-    .select-all
-      font-size $font-mid
-      padding 0 15px
-    h1
-      height: 44px
-      line-height: 44px
-      font-size: $font-header
-      font-weight: bold
-    .options-btn
-      position: absolute
-      top: 0px
-      right: 0
-      font-size: 0
-      .check-btn, .much-option
-        display: inline-block
-        height: 100%
-        line-height: 44px
-        padding: 0 15px
-        font-size: $font-mid
+.m-header {
+  position: relative;
+  height: 44px;
+  text-align: center;
+  color: $color-theme;
+  border-1px($border-bootm-color);
 
+  .back {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    padding: 0 15px 0 10px;
+    line-height: 44px;
+    text-align: left;
+    font-size: 25px;
+    color: $color-theme;
+  }
 
+  .select-all {
+    font-size: $font-mid;
+    padding: 0 15px;
+  }
 
+  h1 {
+    height: 44px;
+    line-height: 44px;
+    font-size: $font-header;
+    font-weight: bold;
+  }
+
+  .options-btn {
+    position: absolute;
+    top: 0px;
+    right: 0;
+    font-size: 0;
+
+    .check-btn, .much-option {
+      display: inline-block;
+      height: 100%;
+      line-height: 44px;
+      padding: 0 15px;
+      font-size: $font-mid;
+    }
+  }
+}
 </style>
