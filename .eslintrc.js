@@ -28,6 +28,6 @@ module.exports = {
         'indent': 0,
         'skipBlankLines': 0,
         'no-multiple-empty-lines': 0,
-        'no-trailing-spaces': 1
+        'no-trailing-spaces': 0
     }
 }

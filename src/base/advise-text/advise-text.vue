@@ -1,26 +1,25 @@
 <template>
+<transition name="slide">
  <div class="wrapper" v-show="isShow">
-   <div class="toast"></div>
+   <div class="toast" @click="hide"></div>
    <div class="main">
      <div class="header">
-       <span class="cancel">取消</span>
+       <span class="cancel" @click="hide">取消</span>
        <h1 class="title">{{title}}</h1>
        <span class="confirm">确认</span>
      </div>
      <div class="content">
-       <textarea class="text" placeholder="批转请输入意见"></textarea>
+       <textarea class="text" placeholder="请输入审批意见"></textarea>
      </div>
    </div>
  </div>
+</transition>
 </template>
 
 <script type="text/ecmascript-6">
  export default {
    props: {
-     title: {
-       type: String,
-       default: '批准'
-     }
+     title: {type: String, default: '批准'}
    },
    data() {
      return {
@@ -42,12 +41,17 @@
 @import "~common/styl/variable.styl"
 @import "~common/styl/mixin.styl"  
   .wrapper
-    position file
+    position fixed
     top 0
     left 0
     right 0
     bottom 0
     overflow hidden
+    &.slide-enter-active, &.slide-leave-active
+      transition all .3s
+      transform translateX(100%)
+    &.slide-enter-to, &.slide-leave
+      transform translateX(0)  
     .toast
       position absolute
       top 0
@@ -96,7 +100,7 @@
           line-height 21px
           text-indent 15px
           font-size $font-mid
-          color #999
+          color #333
           outline none
         textarea::placeholder
           font-size $font-mid

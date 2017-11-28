@@ -15,9 +15,10 @@
           :key="index"
           ref="list"
           v-show="!isMutiple"
+          @click="jumpIntoDetail"
           @touchstart.prevent="touchSlideStart(index,item,$event)"
           @touchmove.prevent="touchSlideMove(index,$event)"
-          @touchend="touchSlideEnd(index,$event)"
+          @touchend.prevent="touchSlideEnd(index,$event)"
       >
         <div class="item-inner">
         <approval-list :item="item"></approval-list>
@@ -71,6 +72,7 @@
     },
     data() {
       return {
+        // 展开列的索引
         activeItem: -1,
         // 是否还有数据
         unapprovalList: [],
@@ -127,9 +129,10 @@
         this.touch.startX = touches.pageX
       },
       touchSlideMove(index, $event) {
-        if (this.initiated || this.activeItem < 0) return
+        if (!this.touch.initiated) return
         let touches = $event.touches[0]
         let deltaX = touches.pageX - this.touch.startX
+        // 如果只是单纯的点击，没有滑动，则状态要重置
         if (Math.abs(deltaX) < START_SLIDE) return
         if (deltaX > 0) {
           this.$refs.list[index].style[transform] = `translate3d(0,0,0)`
@@ -139,7 +142,10 @@
         this.$refs.list[index].style[transition] = '0.3s cubic-bezier(0,0,0.58,1)'
       },
       touchSlideEnd(index, $event) {
-        this.initiated = false
+        this.touch.initiated = false
+      },
+      jumpIntoDetail() {
+        console.log('点击进入详情页')
       },
       onPullingDown() {
         const _self = this
@@ -236,12 +242,6 @@
     width: 100%
     ul
       overflow hidden
-      .pull-down
-        color #666
-        &.slide-enter-active, &.slide-leave-active
-          transition: height  all .5s linear
-        &.slide-enter, &.slide-leave-to
-          opacity: 0
       .list-item
         position relative
         height 70px

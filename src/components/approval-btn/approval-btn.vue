@@ -1,18 +1,53 @@
 <template>
- <div class="btn-wrapper">
-     <span class="btn-item" :class="{'approval-active':atLeastOne}">批准</span>
-     <span class="btn-item" :class="{'reject-active':atLeastOne}">驳回</span>
- </div>
+<div>
+    <div class="btn-wrapper">
+     <span class="btn-item" 
+        :class="{'approval-active':atLeastOne}"
+        @click="approvalClick"
+      >批准</span>
+     <span class="btn-item" 
+        :class="{'reject-active':atLeastOne}"
+        @click="rejectClick"
+     >驳回</span>
+    </div>
+    <advise-text ref="adviseText" :title="title"></advise-text>
+</div>
+ 
 </template>
 
 <script type="text/ecmascript-6">
 import {mapGetters} from 'vuex'
+import AdviseText from 'base/advise-text/advise-text'
 // 只要选中一下，就高亮
  export default {
      computed: {
          ...mapGetters([
-             'atLeastOne'
+            'atLeastOne'
          ])
+     },
+     data () {
+        return {
+            title: '批准'      
+        }
+     },
+     components: {
+         AdviseText
+     },
+     methods: {
+         approvalClick() {
+           if (!this.atLeastOne) {
+               return
+            }  
+            this.title = '批准'
+            this.$refs.adviseText.show()
+         },
+         rejectClick() {
+            if (!this.atLeastOne) { 
+                return 
+            }
+            this.title = '驳回'
+            this.$refs.adviseText.show()
+         }
      }
 }
 </script>
