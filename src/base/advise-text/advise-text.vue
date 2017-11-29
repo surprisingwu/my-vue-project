@@ -6,24 +6,27 @@
      <div class="header">
        <span class="cancel" @click="hide">取消</span>
        <h1 class="title">{{title}}</h1>
-       <span class="confirm">确认</span>
+       <span class="confirm" @click="approvalClick">确认</span>
      </div>
      <div class="content">
-       <textarea class="text" placeholder="请输入审批意见"></textarea>
+       <textarea v-model="msg" class="text" placeholder="请输入审批意见"></textarea>
      </div>
    </div>
+  <confirm ref="confirmDialog" :text="msg" ></confirm>
  </div>
 </transition>
 </template>
 
 <script type="text/ecmascript-6">
+import Confirm from 'base/confirm/confirm'
  export default {
    props: {
      title: {type: String, default: '批准'}
    },
    data() {
      return {
-       isShow: false
+       isShow: false,
+       msg: ''
      }
    },
    methods: {
@@ -32,7 +35,13 @@
      },
      hide() {
        this.isShow = false
+     },
+     approvalClick() {
+       this.$refs.confirmDialog.show()
      }
+   },
+   components: {
+     Confirm
    }
  }
 </script>
